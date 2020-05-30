@@ -5,3 +5,4 @@ src/assets
 yarn-error.log
 npm-debug.log
 static
+server

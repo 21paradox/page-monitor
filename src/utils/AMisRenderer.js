@@ -11,13 +11,10 @@ class AMisRendererComp extends React.Component {
     //   extendedTimeOut: 6000
     // })
     // console.log(toast.error);
-
-    console.log(notice, 11)
   }
 
   render() {
     const { schema } = this.props;
-    console.log(this.props);
     return (
       <div>
         {renderSchema(
@@ -44,33 +41,40 @@ class AMisRendererComp extends React.Component {
             fetcher: ({ url, method, data, config }) => {
               // 用来发送 Ajax 请求，建议使用 axios
               console.log(method, url, data, config);
+              let sendBody = {};
+              let query = {}
+              if (method.toLowerCase() === 'post' || method.toLowerCase() === 'put') {
+                sendBody = data;
+              } else if (method.toLowerCase() === 'get') {
+                query = data;
+              }
 
-              if (typeof url === 'function') {
-                return url({
-                  method,
-                  data,
-                  config,
-                });
+              const sendParam = {
+                showLoading: false,
+                url,
+                method,
+                query,
+                body: sendBody,
               }
 
               return utils
-                .sendRequest({
-                  showLoading: false,
-                  url,
-                  method,
-                  body: data,
-                  type: method,
-                })
+                .sendRequest(sendParam)
                 .then(res => {
-                  // const body = res.body;
-                  // return {
-                  //   data: res.body
-                  // };
+                  const resHeaders = res.header;
+                  let data = res.body;
+                  if (resHeaders['x-range']) {
+                    const [, offset, offsetNext, total] = resHeaders['x-range'].match(/(\d+)-(\d+)\/(\d+)/)
+                    data = {
+                      offset,
+                      total,
+                      items: res.body
+                    }
+                  }
                   return {
                     data: {
-                      status: res.body.code,
-                      msg: res.body.message,
-                      data: res.body.result,
+                      status: 0,
+                      msg: '',
+                      data,
                     },
                   };
                 });

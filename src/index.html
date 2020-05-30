@@ -17,9 +17,6 @@
     <div id="root"></div>
     <% htmlWebpackPlugin.files.js.forEach((str) => { %>
     <script src="<%= str %>"></script>
-    <% if (str.indexOf('cdn.jsdelivr.net') !== -1) { %>
-    <script>window.React || document.write('<script src="./vendor.js"></' + 'script>');</script>
-    <% }
-    }); %>
+    <% }); %>
   </body>
 </html>

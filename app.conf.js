@@ -1,1 +1,1 @@
-module.exports.publicPath = '/admin';
+module.exports.publicPath = '/static';

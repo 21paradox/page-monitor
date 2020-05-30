@@ -1,0 +1,26 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "lint": "standard --fix"
+  },
+  "dependencies": {
+    "cron": "^1.8.2",
+    "http-status": "^1.4.2",
+    "koa": "^2.12.0",
+    "koa-bodyparser": "^4.3.0",
+    "koa-cors": "^0.0.16",
+    "koa-logger": "^3.2.1",
+    "koa-mount": "^4.0.0",
+    "koa-restql": "^15.0.0-beta",
+    "koa-router": "^8.0.8",
+    "koa-static": "^5.0.0",
+    "mysql2": "^2.1.0",
+    "node-cron": "^2.0.3",
+    "puppeteer": "^3.1.0",
+    "sequelize": "^5.21.11",
+    "standard": "^14.3.4"
+  }
+}

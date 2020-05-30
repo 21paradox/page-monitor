@@ -1,56 +1,48 @@
+const Koa = require('koa');
+const BodyParser = require('koa-bodyparser');
+// const Router = require('koa-router');
+const Logger = require('koa-logger');
+const serve = require('koa-static');
+const mount = require('koa-mount');
+const cors = require('koa-cors');
+const HttpStatus = require('http-status');
+const fs = require('fs');
+const path = require('path');
+const RestQL = require('koa-restql');
+const { sequelize } = require('./models//index');
 
-const http = require('http');
-const url = require('url');
+const app = new Koa();
 
-const retBase = {
-  code: 0,
-  result: {},
-  message: '',
-};
-function resp(res, data) {
-  res.setHeader('content-type', 'application/json; charset=utf-8');
-  res.end(JSON.stringify(data));
-}
+// These are the new change
+const staticPage = new Koa();
+staticPage.use(
+  serve(path.resolve(__dirname, '../public')),
+);
+// serve the build directory
+app.use(mount('/static', staticPage));
 
-const server = http.createServer(async (req, res) => {
-  const parsed = url.parse(req.url, true);
+app.use(BodyParser());
+app.use(Logger());
+app.use(cors());
 
-  console.log(parsed);
+const sqlPage = new Koa();
+const restql = new RestQL(sequelize.models);
+sqlPage.use(restql.routes());
+sqlPage.use(() => {});
+app.use(mount('/api-restql', sqlPage));
 
-  if (parsed.pathname === '/admin/api/login') {
-    if (parsed.query.userName === 'admin' && parsed.query.password === 'admin') {
-      res.setHeader('asdas', 'asdsd');
-      res.setHeader('Set-Cookie', 'sessionid=123123; HttpOnly; Path=/');
+// const router = new Router();
+// app.use(router.routes()).use(router.allowedMethods());
 
-      resp(res, {
-        ...retBase,
-        result: {
-          uid: 11,
-          userName: 'admin',
-        },
-      });
-    } else {
-      resp(res, {
-        ...retBase,
-        code: 1,
-        message: 'password incorrect',
-      });
-    }
-  } else if (parsed.pathname === '/admin/api/login/check') {
-    console.log(req.headers.cookie);
-
-    if (req.headers.cookie.indexOf('sessionid') === -1) {
-      resp(res, {
-        ...retBase,
-        code: 1,
-        message: 'password incorrect',
-      });
-    } else {
-      resp(res, {
-        ...retBase,
-      });
-    }
-  }
+app.use(async (ctx) => {
+  ctx.status = HttpStatus.OK;
+  ctx.set('Content-Type', 'text/html');
+  ctx.body = fs.readFileSync(path.resolve(__dirname, '../public/index.html'));
 });
 
-server.listen(7001);
+const PORT = process.env.PORT || 7001;
+app.listen(PORT, () => {
+  console.log('==> 🌎  Listening on port %s. Visit http://localhost:%s/', PORT, PORT);
+
+  require('./cron/index').init()
+});

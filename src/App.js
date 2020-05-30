@@ -25,11 +25,11 @@ import './globalStyles/icons.less';
 
 // import * as utils from './utils';
 import * as constant from './constants';
-import { reqCheckLogin } from './utils/api';
 
 import Login from './pages/Login';
 
-const PATH_PREFIX = '/admin';
+const { PATH_PREFIX } = constant;
+
 function normalizeLink(path) {
   return path[0] === '/' ? path : `${PATH_PREFIX}/${path}`;
 }
@@ -52,33 +52,6 @@ class App extends PureComponent {
         payload: a,
       });
     };
-    reqCheckLogin().then(
-      (body) => {
-        if (body.code !== 0) {
-          dispatch({
-            type: constant.UPDATE_COMMON,
-            payload: {
-              userLoggedIn: false,
-            },
-          });
-          return;
-        }
-        dispatch({
-          type: constant.UPDATE_COMMON,
-          payload: {
-            userLoggedIn: true,
-          },
-        });
-      },
-      () => {
-        dispatch({
-          type: constant.UPDATE_COMMON,
-          payload: {
-            userLoggedIn: false,
-          },
-        });
-      },
-    );
   }
 
   toggleSettingIcon = () => {
@@ -165,7 +138,7 @@ class App extends PureComponent {
           <div className="a-Layout-brand">
             <img src={BountyLogo} alt="bounty-logo" />
             <span className="hidden-folded m-l-sm" style={{ verticalAlign: 'middle' }}>
-              Bounty Admin
+              Scan Admin
             </span>
           </div>
         </div>
@@ -195,6 +168,7 @@ class App extends PureComponent {
 
   render() {
     const { leftAside, userLoggedIn } = this.props;
+    console.log(12);
 
     return (
       <BrowserRouter>
@@ -202,15 +176,16 @@ class App extends PureComponent {
         <AlertComponent key="alert" />
 
         <Switch>
-          <Route path="/admin/login" exact component={Login} />
+          <Route path={`${PATH_PREFIX}/login`} exact component={Login} />
           <Route
-            path="/admin"
+            path={`${PATH_PREFIX}/`}
             render={(arg) => {
+              console.log({ userLoggedIn });
               if (userLoggedIn === 'loading') {
                 return null;
               }
               if (userLoggedIn === false) {
-                return <Redirect to="/admin/login" />;
+                return <Redirect to={`${PATH_PREFIX}/login`} />;
               }
 
               return (

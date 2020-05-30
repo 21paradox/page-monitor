@@ -3,7 +3,7 @@ import { UPDATE_COMMON } from '../constants';
 const initState = {
   lang: navigator.language || 'en',
   user: { nickname: '' },
-  userLoggedIn: 'loading',
+  userLoggedIn: true,
 };
 
 export default (state = initState, action) => {

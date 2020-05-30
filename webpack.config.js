@@ -7,13 +7,11 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const WebpackCdnPlugin = require('webpack-cdn-plugin');
 const fs = require('fs');
 const sass = require('sass');
-const webpack = require('webpack');
 const IconFontPlugin = require('icon-font-loader').Plugin;
 const { publicPath } = require('./app.conf.js');
 
 const devMode = process.env.NODE_ENV !== 'production';
 /* eslint no-underscore-dangle: 0 */
-const cdnGetJs = WebpackCdnPlugin._getJs;
 const cdnModules = [
   {
     name: 'react',
@@ -54,11 +52,6 @@ const cdnModules = [
     name: 'styled-components',
     var: 'styled',
     path: 'dist/styled-components.min.js',
-  },
-  {
-    name: 'materialize-css',
-    var: 'M',
-    path: 'dist/js/materialize.js',
   },
   {
     name: 'echarts',
@@ -105,16 +98,6 @@ const vendorPlugin = {
   },
 };
 
-WebpackCdnPlugin._getJs = (...args) => {
-  const cdnUrls = cdnGetJs(...args);
-  if (devMode === false) {
-    const combineUrl = 'https://cdn.jsdelivr.net/combine/';
-    const cdnUrlPath = cdnUrls.map(v => v.replace('https://cdn.jsdelivr.net/', ''));
-    return [combineUrl + cdnUrlPath.join(',')];
-  }
-  return cdnUrls;
-};
-
 module.exports = {
   entry: path.resolve(__dirname, 'src', 'index.js'), // 项目的起点入口
 
@@ -123,7 +106,7 @@ module.exports = {
     path: path.resolve(__dirname, 'public'),
     chunkFilename: '[name].[chunkhash].js',
     filename: '[name].[chunkhash].js',
-    publicPath,
+    publicPath: `${publicPath}`,
   },
   plugins: [
     // 插件配置
@@ -151,25 +134,6 @@ module.exports = {
     }),
     vendorPlugin,
     new IconFontPlugin(),
-    (() => {
-      /* eg:
-export ALI_OSS_KEYS=$(cat <<EOF
-{
-"AccessKeyId": "xxxx",
-"AccessKeySecret": "xxxxxx",
-"bucket": "conflux-bucket",
-"region": "oss-cn-beijing"
-}
-EOF
-)
-*/
-      const ALI_OSS_KEYS = {
-        ...JSON.parse(process.env.ALI_OSS_KEYS || '{}'),
-      };
-      return new webpack.EnvironmentPlugin({
-        ALI_OSS_KEYS,
-      });
-    })(),
   ],
   module: {
     // 模块加载

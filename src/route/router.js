@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { mapTree } from 'amis/lib/utils/helper';
+import { PATH_PREFIX } from '../constants';
 
 const navCfg = [
   {
@@ -24,50 +25,24 @@ const navCfg = [
       //   ],
       // },
       {
-        label: '邀请码管理',
+        label: '监控配置',
         icon: 'glyphicon glyphicon-link',
         children: [
           {
-            label: '邀请码扩容',
+            label: 'url配置',
             path: 'invite-code-manage',
-            component: lazy(() => import('../pages/InviteCodeManage/invitation')),
-          },
-        ],
-      },
-
-      {
-        label: '签到管理',
-        icon: 'glyphicon glyphicon-link',
-        children: [
-          {
-            label: '签到设置',
-            path: 'daily-signin',
-            component: lazy(() => import('../pages/DailySignManage/index')),
-          },
-        ],
-      },
-
-      {
-        label: '运营dashboard',
-        icon: 'glyphicon glyphicon-list-alt',
-        children: [
-          {
-            label: '邀请码使用统计',
-            path: 'invitecode-dashboard',
-            component: lazy(() => import('../pages/InviteCodeManage/dashboard')),
+            component: lazy(() => import('../pages/PageMonitor/dashboard')),
           },
           {
-            label: '用户信息查询',
-            path: 'userSearch',
-            component: lazy(() => import('../pages/Dashboard/userSearch')),
+            label: 'job配置',
+            path: 'page-cron',
+            component: lazy(() => import('../pages/PageMonitor/cronjob')),
           },
         ],
       },
     ],
   },
 ];
-
-const PATH_PREFIX = '/admin';
 
 function navigations2route(pathPrefix = PATH_PREFIX) {
   const routes = [];

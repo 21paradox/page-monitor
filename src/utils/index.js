@@ -1,11 +1,18 @@
 import superagent from 'superagent';
 import PropTypes from 'prop-types';
 import decode from 'jwt-decode';
-import { toast } from 'amis';
+import { toast, registerFilter } from 'amis';
 import { createIntl, createIntlCache } from 'react-intl';
 
 import zhTranslationMessages from '../lang/zh-CN';
 import enTranslationMessages from '../lang/en';
+
+
+registerFilter('pageToOffset', (page, limit = 10) => {
+  const limitNum = parseInt(limit, 10);
+  return (page - 1) * limitNum;
+});
+
 
 export { compose } from 'redux';
 
@@ -121,20 +128,12 @@ export const i18nTxt = (str) => {
 
 
 export const sendRequest = (config) => {
-  const reqType = config.type || 'POST';
-  const accessToken = auth.getToken();
+  const reqType = config.method || 'GET';
   const apiUrl = config.url.startsWith('http') ? config.url : config.url;
 
   const reqPromise = superagent(reqType, apiUrl);
-  if (!config.url.startsWith('http')) {
-    reqPromise.set({
-      ...config.headers,
-      authorization: accessToken || undefined,
-    });
-  }
-
   reqPromise
-    .query(config.query)
+    .query(config.data)
     .send(config.body)
     .responseType(config.responseType || 'json');
 
@@ -144,3 +143,10 @@ export const sendRequest = (config) => {
   });
   return reqPromise;
 };
+
+// superagent('get', '/api-restql/Page/1').then(() => {
+// })
+
+// sendRequest({ url: `/api-restql/Page`,
+//   body: {},
+// })
