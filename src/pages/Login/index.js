@@ -18,7 +18,7 @@ const Wrapper = styled.div`
   }
 `;
 const Back = styled.div`
-  background-color: #d2d6de
+  background-color: #d2d6de;
   position: fixed;
   z-index: -1;
   top: 0;
@@ -52,7 +52,7 @@ class Login extends Component {
             },
           });
           setTimeout(() => {
-            history.push(`${constant.publicPath}/`);
+            history.push('/');
           });
           return payload;
         },

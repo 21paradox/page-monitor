@@ -168,7 +168,6 @@ class App extends PureComponent {
 
   render() {
     const { leftAside, userLoggedIn } = this.props;
-    console.log(12);
 
     return (
       <BrowserRouter>

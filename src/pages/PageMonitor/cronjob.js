@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import {
+  Link,
+} from 'react-router-dom';
 import { AMisRenderer } from '../../utils/AMisRenderer';
+import * as constant from '../../constants';
+
+const { PATH_PREFIX } = constant;
 /* eslint no-underscore-dangle: 0 */
 
 class CronJobPanel extends Component {
@@ -17,7 +23,7 @@ class CronJobPanel extends Component {
         limit: 10,
       },
       api: {
-        url: '/api-restql/cron?_include=page',
+        url: '/api/restql/cron?_include=page',
         method: 'get',
         qsOptions: {
           arrayFormat: 'repeat',
@@ -67,14 +73,14 @@ class CronJobPanel extends Component {
                   type: 'form',
                   // reload: 'pageList',
                   api: {
-                    url: '/api-restql/cron',
+                    url: '/api/restql/cron',
                     method: 'put',
                     data: {
                       id: '$id',
                       pageId: '$pageId',
                       jobName: '$jobName',
                       runningInterval: '$runningInterval',
-                      jobState: 'stopped',
+                      jobState: '$jobState',
                     },
                   },
                   controls: [
@@ -86,7 +92,7 @@ class CronJobPanel extends Component {
                       required: true,
                       value: 'page.id',
                       source: {
-                        url: '/api-restql/page',
+                        url: '/api/restql/page',
                         method: 'get',
                         qsOptions: {
                           arrayFormat: 'repeat',
@@ -111,6 +117,23 @@ class CronJobPanel extends Component {
                       name: 'jobName',
                       label: '任务名',
                       required: true,
+                    },
+                    {
+                      type: 'select',
+                      name: 'jobState',
+                      label: '任务状态',
+                      clearable: true,
+                      required: true,
+                      options: [
+                        {
+                          value: 'running',
+                          label: 'running',
+                        },
+                        {
+                          value: 'stopped',
+                          label: 'stopped',
+                        },
+                      ],
                     },
                     {
                       type: 'select',
@@ -157,7 +180,7 @@ class CronJobPanel extends Component {
                     actionType: 'ajax',
                     label: '确定',
                     api: {
-                      url: '/api-restql/cron/$id',
+                      url: '/api/restql/cron/$id',
                       method: 'delete',
                       data: {
                         where: {
@@ -174,6 +197,22 @@ class CronJobPanel extends Component {
               },
             },
           ],
+        },
+        {
+          type: 'text',
+          name: '',
+          label: '详情',
+          children($props) {
+            return (
+              <td>
+                <span className="a-PlainField">
+                  <Link to={`${PATH_PREFIX}/page-chart?pageId=${$props.data.pageId}`}>
+                  详情
+                  </Link>
+                </span>
+              </td>
+            );
+          },
         },
       ],
     };
@@ -193,13 +232,13 @@ class CronJobPanel extends Component {
               type: 'form',
               // reload: 'pageList',
               api: {
-                url: '/api-restql/cron',
+                url: '/api/restql/cron',
                 method: 'post',
                 data: {
                   pageId: '$pageId',
                   jobName: '$jobName',
                   runningInterval: '$runningInterval',
-                  jobState: 'stopped',
+                  jobState: 'running',
                 },
               },
               controls: [
@@ -210,7 +249,7 @@ class CronJobPanel extends Component {
                   clearable: true,
                   required: true,
                   source: {
-                    url: '/api-restql/page',
+                    url: '/api/restql/page',
                     method: 'get',
                     qsOptions: {
                       arrayFormat: 'repeat',

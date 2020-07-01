@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { AMisRenderer } from '../../utils/AMisRenderer';
 /* eslint no-underscore-dangle: 0 */
 
-class InviteCodeDashboard extends Component {
+class PageUrlMange extends Component {
   render() {
     const crudBody = {
       type: 'crud',
@@ -17,7 +17,7 @@ class InviteCodeDashboard extends Component {
         limit: 10,
       },
       api: {
-        url: '/api-restql/page',
+        url: '/api/restql/page',
         method: 'get',
         qsOptions: {
           arrayFormat: 'repeat',
@@ -29,7 +29,7 @@ class InviteCodeDashboard extends Component {
         },
       },
       quickSaveItemApi: {
-        url: '/api-restql/page',
+        url: '/api/restql/page',
         method: 'put',
         data: {
           url: '$url',
@@ -71,7 +71,7 @@ class InviteCodeDashboard extends Component {
                 body: {
                   type: 'form',
                   api: {
-                    url: '/api-restql/page',
+                    url: '/api/restql/page',
                     method: 'put',
                     data: {
                       url: '$url',
@@ -121,7 +121,7 @@ class InviteCodeDashboard extends Component {
                     actionType: 'ajax',
                     label: '确定',
                     api: {
-                      url: '/api-restql/page/$id',
+                      url: '/api/restql/page/$id',
                       method: 'delete',
                       data: {
                         where: {
@@ -157,7 +157,7 @@ class InviteCodeDashboard extends Component {
               type: 'form',
               // reload: 'pageList',
               api: {
-                url: '/api-restql/page',
+                url: '/api/restql/page',
                 method: 'post',
                 data: {
                   url: '$url',
@@ -200,4 +200,4 @@ class InviteCodeDashboard extends Component {
   }
 }
 
-export default connect()(InviteCodeDashboard);
+export default connect()(PageUrlMange);

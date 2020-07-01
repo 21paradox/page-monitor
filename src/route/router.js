@@ -11,7 +11,7 @@ const navCfg = [
       //   path: 'dashboard',
       //   label: 'Dashboard',
       //   icon: 'glyphicon glyphicon-signal',
-      //   component: lazy(() => import('../pages/Basic')),
+      //   component: lazy(() => import('../pages/Test')),
       // },
       // {
       //   label: '表单页面',
@@ -30,13 +30,19 @@ const navCfg = [
         children: [
           {
             label: 'url配置',
-            path: 'invite-code-manage',
-            component: lazy(() => import('../pages/PageMonitor/dashboard')),
+            path: 'pageurl-manage',
+            component: lazy(() => import('../pages/PageMonitor/pageurl')),
           },
           {
             label: 'job配置',
             path: 'page-cron',
             component: lazy(() => import('../pages/PageMonitor/cronjob')),
+          },
+          {
+            label: 'url图表',
+            path: 'page-chart',
+            hide: true,
+            component: lazy(() => import('../pages/PageMonitor/pageChart')),
           },
         ],
       },

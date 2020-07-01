@@ -58,6 +58,7 @@ module.exports = merge(commom, {
   mode: 'development',
   devtool: 'inline-source-map', // 代码关联显示方式
   devServer: {
+    disableHostCheck: true,
     publicPath: `${publicPath}`,
     port: 8002,
     contentBase: [path.resolve(__dirname, 'dist')], // 开发服务运行时的文件根目录
@@ -79,7 +80,7 @@ module.exports = merge(commom, {
       cdnRouter(app);
     },
     proxy: {
-      '/api-restql': {
+      '/api': {
         target: process.env.BACKEND_API || 'http://localhost:7001/',
         changeOrigin: true,
         secure: false,

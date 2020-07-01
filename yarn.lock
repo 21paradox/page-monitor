@@ -10371,7 +10371,7 @@ zrender@4.1.0:
   resolved "https://registry.npm.taobao.org/zrender/download/zrender-4.1.0.tgz?cache=0&sync_timestamp=1567176473836&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fzrender%2Fdownload%2Fzrender-4.1.0.tgz#866ab97d0744c473d9b314ac5a89e7207c140608"
   integrity sha1-hmq5fQdExHPZsxSsWonnIHwUBgg=
 
-zrender@4.3.1:
+zrender@4.3.1, zrender@^4.3.1:
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/zrender/-/zrender-4.3.1.tgz#baf8aa6dc8187a2f819692d7d5f9bedfa2b90fa3"
   integrity sha512-CeH2TpJeCdG0TAGYoPSAcFX2ogdug1K7LIn9UO/q9HWqQ54gWhrMAlDP9AwWYMUDhrPe4VeazQ4DW3msD96nUQ==

@@ -7,50 +7,68 @@ const {
 const headUrl = require('./headUrl');
 
 async function init() {
-  const allJobs = await Cron.findAll();
+  const delay = (time) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, time)
+    })
+  }
 
-  allJobs.forEach(async (jobRaw) => {
-    const job = jobRaw.toJSON();
+  while (true) {
+    const allJobs = await Cron.findAll();
+    const result = allJobs.map(async (jobRaw) => {
 
-    if (job.jobState === 'running') {
-      let setTime;
-      if (job.runningInterval === '1hour') {
-        setTime = '0 * * * *';
-      } else if (job.runningInterval === '1hour') {
-        setTime = '0 0 * * *';
+      const job = jobRaw.toJSON();
+      const jobLastRun = job.lastRun;
+
+      let shouldRun = false;
+      if (job.jobState === 'running') {
+        if (!jobLastRun) {
+          shouldRun = true;
+        } else {
+          if (job.runningInterval === '1hour') {
+            if (Date.now() - jobLastRun.getTime() >= 5 * 60 * 1000) {
+              shouldRun = true;
+            }
+          } else if (job.runningInterval === '1day') {
+            if (Date.now() - jobLastRun.getTime() >= 24 * 60 * 60 * 1000) {
+              shouldRun = true;
+            }
+          }
+        }
       }
+
+      if (!shouldRun) {
+        return
+      }
+
+      await Cron.update({ lastRun: new Date() }, {
+        where: {
+          id: job.id,
+        }
+      });
 
       const pageInfo = await Page.findOne({
         where: {
-          id: job.page_id,
+          id: job.pageId,
         },
       });
-      console.log(pageInfo.toJSON());
+      console.log(pageInfo.toJSON(), 'prepare run');
 
-      let round = 0;
-      const cronJob = new CronJob(
-        setTime,
-        (() => {
-          round += 1;
-          if (round > 1) {
-            return;
-          }
-          // console.log('message');
-          console.log(pageInfo.url, 'aa');
-          headUrl({
-            testUrl: pageInfo.url,
-          });
-        }),
-        null,
-        true,
-        'Asia/Hong_Kong',
-      );
-    }
-  });
+      return headUrl({
+         testUrl: pageInfo.url,
+      });
+    });
+
+    await Promise.all(result).catch((e) => {
+      console.log(e);
+    });
+    await delay(5000);
+  }
 }
 
 // init();
-
 
 module.exports = {
   init

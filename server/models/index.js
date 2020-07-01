@@ -3,7 +3,8 @@ const Sequelize = require('sequelize');
 
 // Option 1: Passing parameters separately
 const sequelize = new Sequelize('scan_monitor', 'root', 'my-secret-pw', {
-  host: 'localhost',
+  // host: 'localhost',
+  host: '121.36.13.244',
   port: '3306',
   dialect: 'mysql',
   define: {
@@ -27,7 +28,7 @@ const Page = sequelize.define('page', {
 
 const Round = sequelize.define('round', {
   runningAt: {
-    type: Sequelize.TIME,
+    type: Sequelize.DATE,
     allowNull: false,
   },
 }, {
@@ -88,12 +89,16 @@ const Cron = sequelize.define('cron', {
     type: Sequelize.ENUM('1hour', '1day'),
     allowNull: false,
   },
+  lastRun: {
+    type: Sequelize.DATE,
+  },
 }, {
   sequelize,
   // modelName: 'cron'
 });
 
 Cron.belongsTo(Page, { as: 'page' });
+Cron.belongsTo(Round, { as: 'lastRound' });
 
 // sequelize.sync({ force: true }).then(() => {
 //   console.log('sync schema done')

@@ -144,9 +144,9 @@ export const sendRequest = (config) => {
   return reqPromise;
 };
 
-// superagent('get', '/api-restql/Page/1').then(() => {
+// superagent('get', '/api/restql/Page/1').then(() => {
 // })
 
-// sendRequest({ url: `/api-restql/Page`,
+// sendRequest({ url: `/api/restql/Page`,
 //   body: {},
 // })
